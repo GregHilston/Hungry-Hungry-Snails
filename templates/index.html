@@ -1,0 +1,24 @@
+<!doctype html>
+
+<title>Hungry Hungry Snails</title>
+
+<body>
+  <h1>Hungry Hungry Snails</h1>
+
+  <p>Hungry Hungry Snails is a competitive game intended to be played by individuals writing their own scripts with logic to make decisions for them.</p>
+
+  <h2>Leader Board</h2>
+
+  <table>
+    <th>Name</th>
+    <th>Highest School</th>
+    <ul>
+        {% for player_name, highest_score in zipped_player_names_and_scores: %}
+          <tr>
+            <td>{{ player_name }}</td>
+            <td>{{ highest_score }}</td>
+          </tr>
+        {% endfor %}
+      </ul>
+  </table>
+</body>
