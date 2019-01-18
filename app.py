@@ -73,13 +73,10 @@ def parse_last_game_state(name, unique_token, last_step_taken):
         
         return data["max_steps"], data["board"], data["score"], data["steps_taken"], find_player_index(name, unique_token, last_step_taken)
 
-def move_player(name, unique_token, last_step_taken, new_player_location_index_offset, score):
+def move_player(name, unique_token, last_step_taken, new_player_location_index_offset, score, steps_taken):
     filepath = f"game_history/{name}/{unique_token}/{last_step_taken}.json"
     player_index = find_player_index(name, unique_token, last_step_taken)
     new_player_index = player_index + new_player_location_index_offset
-
-    print(f"player_index {player_index}")
-    print(f"new_player_index {new_player_index}")
 
     with open(filepath, 'r') as fp:
         data = json.load(fp)
@@ -88,25 +85,14 @@ def move_player(name, unique_token, last_step_taken, new_player_location_index_o
         for row_index, row in enumerate(data["board"]):
             for column_index, column in enumerate(row):
                 if index == player_index:
-                    print(f"\tfound player at index {index}")
-                    print(f"\t\tbefore {data['board'][row_index][column_index]}")
                     data["board"][row_index][column_index] = "_"
-                    print(f"\t\tafter {data['board'][row_index][column_index]}")
                 if index == new_player_index:
-                    print(f"\tfound new_player_index at {new_player_index}")
-
                     if column == "f":
-                        print("\t\tfound food")
                         score += 1
-                        print(f"Found food at index {index} where new_player_index {new_player_index}")
-
-                    print(f"\t\tbefore {data['board'][row_index][column_index]}")
                     data["board"][row_index][column_index] = "p"
-                    print(f"\t\tafter {data['board'][row_index][column_index]}")
-
                 index += 1
 
-        return data["board"], score
+        return data["board"], score, steps_taken + 1
 
 def get_players_highest_score(name):
     best_score = -1
@@ -147,6 +133,9 @@ def index(name=None):
 def init(board_number=0):
     if not request.form.get("name"):
         return Response(json.dumps({"message": "Required parameter 'name' was not provided. How would we know who you are?"}), 422)
+
+    if request.form.get("board_number"):
+        board_number = request.form.get("board_number")
 
     with open(f'levels/{board_number}.json', 'r') as fp:
         INITIAL = json.load(fp)
@@ -213,11 +202,9 @@ def step():
     else:
         return Response(json.dumps({"message": "Required parameter 'step_direction' was not valid character. Accepted characters are ['n', 'e', 's', 'w']"}), 422)
 
-    new_board, new_score = move_player(request.form["name"], request.form["unique_token"], last_step_taken, player_location_index_offset, score)    
+    new_board, new_score, steps_taken = move_player(request.form["name"], request.form["unique_token"], last_step_taken, player_location_index_offset, score, steps_taken)    
 
-    print(f"new_board \n{new_board}")
-
-    steps_taken += 1
+    print(f"new board \n{new_board}")
 
     record_step(request.form["name"], request.form["unique_token"], new_board, new_score, max_steps, steps_taken)
 
