@@ -10,13 +10,6 @@ EMPTY_SPACE_TOKEN = '_'
 PLAYER_TOKEN = 'p'
 FOOD_TOKEN = 'f'
 game_history = {}
-# game_rules_function = 
-
-# def collect_most_food_in_least_steps():
-#     pass
-
-# def collest_most_food_in_n_steps():
-#     pass
 
 def create_folder_structure_for_player_if_not_exists(name, unique_token, board_number):
     player_folder = f"game_history/{board_number}/{name}"
