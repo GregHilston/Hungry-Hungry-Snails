@@ -228,7 +228,7 @@ def step():
     d = {}
 
     d["max_steps"] = max_steps
-    d["board"] = board
+    d["board"] = new_board
     d["unique_token"] = request.form["unique_token"]
     d["score"] = new_score
     d["steps_taken"] = steps_taken
