@@ -16,5 +16,4 @@
 - use -v for volume to have files created to persist
 - return your best score
 - return the best score
-- handle multiple maps (allow user to denote map when starting game, default to map 0)
 - could support walls
