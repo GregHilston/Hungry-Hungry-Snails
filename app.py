@@ -64,11 +64,11 @@ def parse_last_game_state(name, unique_token, last_step_taken, board_number):
     with open(filepath, 'r') as fp:
         data = json.load(fp)
         
-        return data["max_steps"], data["board"], data["score"], data["steps_taken"], find_player_index(name, unique_token, last_step_taken)
+        return data["max_steps"], data["board"], data["score"], data["steps_taken"], find_player_index(name, unique_token, last_step_taken, board_number)
 
 def move_player(name, unique_token, last_step_taken, new_player_location_index_offset, score, steps_taken, board_number):
     filepath = f"game_history/{board_number}/{name}/{unique_token}/{last_step_taken}.json"
-    player_index = find_player_index(name, unique_token, last_step_taken)
+    player_index = find_player_index(name, unique_token, last_step_taken, board_number)
     new_player_index = player_index + new_player_location_index_offset
     found_players_new_position = False
 
@@ -101,34 +101,46 @@ def get_players_highest_score(name, board_number):
 
     if os.path.exists(player_folder):
         for game in os.listdir(player_folder):
-            last_step_taken = calculate_last_step_taken(name, game)
+            last_step_taken = calculate_last_step_taken(name, game, board_number)
 
-            _, _, score, _, _ = parse_last_game_state(name, game, last_step_taken)
+            _, _, score, _, _ = parse_last_game_state(name, game, last_step_taken, board_number)
 
             if score > best_score:
                 best_score = score
     
     return best_score
 
-def get_players_names_and_best_scores():
-    player_names = []
-    best_scores = []
+def get_players_names_and_best_scores_per_level():
+    levels = {}
 
     game_history_folder = "game_history"
     if os.path.exists(game_history_folder):
+        for level in os.listdir(game_history_folder):
+            levels[level] = {}
+            levels[level]["player_names"] = []
+            levels[level]["best_scores"] = []
+            for player_name in os.listdir(f"{game_history_folder}/{level}"):
+                levels[level]["player_names"].append(player_name)
 
-        for player_name in os.listdir(game_history_folder):
-            player_names.append(player_name)
+                levels[level]["best_scores"].append(get_players_highest_score(player_name, level))
 
-            best_scores.append(get_players_highest_score(player_name, board_number))
+    return levels
 
-    return player_names, best_scores
+def find_board_number(player_name, unique_token):
+    game_history_folder = "game_history"
+    if os.path.exists(game_history_folder):
+        for level in os.listdir(game_history_folder):
+            for player in os.listdir(game_history_folder + "/" + level):
+                if player == player_name:
+                    for token in os.listdir(game_history_folder + "/" + level + "/" + player):
+                        if token == unique_token:
+                            return level
 
 @app.route('/')
 def index(name=None):
-    player_names, player_scores  = get_players_names_and_best_scores()
+    levels = get_players_names_and_best_scores_per_level()
 
-    return render_template("index.html", zipped_player_names_and_scores=zip(player_names, player_scores))
+    return render_template("index.html", zipped_player_names_and_scores=zip(levels))
 
 @app.route('/game/start', methods=["POST"])
 def init(board_number=0):
@@ -157,7 +169,7 @@ def init(board_number=0):
 
     print(f"initial board \n {initial_copy['board']}")
 
-    record_step(request.form["name"], unique_token, initial_copy["board"], 0, initial_copy["max_steps"], 0, board_number) 
+    record_step(request.form["name"], unique_token, board_number, initial_copy["board"], 0, initial_copy["max_steps"], 0) 
 
     return Response(json.dumps(initial_copy), mimetype='text/json')
 
@@ -172,9 +184,10 @@ def step():
     if not request.form.get("step_direction"):        
         return Response(json.dumps({"message": "Required parameter 'step_direction' was not provided. How would we know where your snail intends to go?"}), 400)
 
-    last_step_taken = calculate_last_step_taken(request.form["name"], request.form["unique_token"])
+    board_number = find_board_number(request.form["name"], request.form["unique_token"])
+    last_step_taken = calculate_last_step_taken(request.form["name"], request.form["unique_token"], board_number)
 
-    max_steps, board, score, steps_taken, player_location_index = parse_last_game_state(request.form["name"], request.form["unique_token"], last_step_taken)
+    max_steps, board, score, steps_taken, player_location_index = parse_last_game_state(request.form["name"], request.form["unique_token"], last_step_taken, board_number)
 
     if max_steps == steps_taken:
         d = {}
@@ -203,14 +216,14 @@ def step():
     else:
         return Response(json.dumps({"message": "Required parameter 'step_direction' was not valid character. Accepted characters are ['n', 'e', 's', 'w']"}), 422)
 
-    valid_mode, new_board, new_score, steps_taken = move_player(request.form["name"], request.form["unique_token"], last_step_taken, player_location_index_offset, score, steps_taken)    
+    valid_mode, new_board, new_score, steps_taken = move_player(request.form["name"], request.form["unique_token"], last_step_taken, player_location_index_offset, score, steps_taken, board_number)    
 
     if not valid_mode:
         return Response(json.dumps({"message": "Invalid move. You would have gone off the edge"}), 422)
 
     print(f"new board \n{new_board}")
 
-    record_step(request.form["name"], request.form["unique_token"], new_board, new_score, max_steps, steps_taken)
+    record_step(request.form["name"], request.form["unique_token"], board_number, new_board, new_score, max_steps, steps_taken)
 
     d = {}
 
