@@ -1,0 +1,1 @@
+docker rm hungry-hungry-snails

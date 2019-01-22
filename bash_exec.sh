@@ -1,0 +1,1 @@
+docker exec -ti hungry-hungry-snails bash
