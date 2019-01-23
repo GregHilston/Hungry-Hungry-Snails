@@ -185,13 +185,11 @@ The following scripts must be run in order:
 
 ## TODO
 
-- check if name and token are valid combinations
-- use -v for volume to have files created to persist
+- ensure that the POSTs have a JSON body being sent and not form data
+- only return 400 when their out of moves, not on last move
 - return your best score
 - return the best score
 - could support walls
-- replace my Docker/Flash with MLFlow (ask max)
 - Could productionify this by using -d on the docker run to run in detached mode
   - use docker logs -f Hungry-Hungry-Snails to look at the stdout/stderr logs
-- crete a Makefile for all my Docker scripts
-- only return 400 when their out of moves, not on last move
+- create a Makefile for all my Docker scripts
