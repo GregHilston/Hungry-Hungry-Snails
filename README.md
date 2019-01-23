@@ -248,3 +248,5 @@ Occurs when
 - return the best score
 - could support walls
 - replace my Docker/Flash with MLFlow (ask max)
+- Could productionify this by using -d on the docker run to run in detached mode
+  - use docker logs -f Hungry-Hungry-Snails to look at the stdout/stderr logs

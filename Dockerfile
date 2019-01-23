@@ -14,6 +14,10 @@ RUN pip install -r requirements.txt
 # This copies our source code down to the container and is why we must rebuild everytime anything in the source code changes
 COPY . /app
 
-ENTRYPOINT [ "python3" ]
+# the command that is actually started
+ENTRYPOINT [ "flask" ] 
 
-CMD [ "app.py" ]
+# the arguments to the entrypoint
+CMD [ "run", "--host", "0.0.0.0" ]
+
+ENV FLASK_APP=app.py
