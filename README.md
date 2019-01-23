@@ -83,6 +83,7 @@ curl -X POST \
 
 **Example Response**
 
+`json`
 ```
 {
     "max_steps": 5,
@@ -107,6 +108,7 @@ Occurs when the required field `name` (`String`) is not passed.
 
 **Example Response**
 
+`json`
 ```
 {"message": "Required parameter 'name' was not provided. How would we know who you are?"}
 ```
@@ -128,6 +130,7 @@ Occurs when the required field `name` (`String`) is not passed.
 
 **Example Response**
 
+`json`
 ```
 {
     "max_steps": 5,
@@ -160,25 +163,25 @@ Occurs when
 
 **Example Response 1**
 
+`json`
 ```
 {"message": "Required parameter 'unique_token' was not provided. How would we know what game you are playing?"}
 ```
 
 **Example Response 2**
 
+`json`
 ```
 {"message": "Invalid move. You would have gone off the edge"}
 ```
 
-## Building
-
-`$ ./build.sh`
-
-*Note: must rebuild every time the source code changes*
-
 ## Running
 
-`$ ./run.sh`
+The following scripts must be run in order:
+
+1. build.sh
+2. clean.sh
+3. run.sh OR run_watch.sh (for live reloading of code changes)
 
 ## TODO
 
