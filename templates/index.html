@@ -10,14 +10,18 @@
   <h2>Leader Board</h2>
 
   <table>
+    <th>Level</th>
     <th>Name</th>
     <th>Highest Score</th>
     <ul>
-        {% for player_name, highest_score in zipped_player_names_and_scores: %}
-          <tr>
-            <td>{{ player_name }}</td>
-            <td>{{ highest_score }}</td>
-          </tr>
+        {% for level in data: %}
+          {% for player_name in data[level]: %}
+            <tr>
+              <td>{{ level }}</td>
+              <td>{{ player_name }}</td>
+              <td>{{ data[level][player_name] }}</td>
+            </tr>
+          {% endfor %}
         {% endfor %}
       </ul>
   </table>

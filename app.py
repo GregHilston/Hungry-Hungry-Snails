@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 EMPTY_SPACE_TOKEN = '_'
-PLAYER_TOKEN = 'p'
+PLAYER_TOKEN = 'w'
 FOOD_TOKEN = 'f'
 game_history = {}
 
@@ -53,7 +53,7 @@ def find_player_index(name, unique_token, last_step_taken, board_number):
 
         for row in data["board"]:
             for column in row:
-                if column == "p":
+                if column == "w":
                     return player_index
 
                 player_index += 1
@@ -87,7 +87,7 @@ def move_player(name, unique_token, last_step_taken, new_player_location_index_o
 
                     if column == "f":
                         new_score += 1
-                    data_copy["board"][row_index][column_index] = "p"
+                    data_copy["board"][row_index][column_index] = "w"
                 index += 1
 
         if found_players_new_position:
@@ -111,20 +111,15 @@ def get_players_highest_score(name, board_number):
     return best_score
 
 def get_players_names_and_best_scores_per_level():
-    levels = {}
+    data = {}
 
     game_history_folder = "game_history"
     if os.path.exists(game_history_folder):
         for level in os.listdir(game_history_folder):
-            levels[level] = {}
-            levels[level]["player_names"] = []
-            levels[level]["best_scores"] = []
+            data[level] = {}
             for player_name in os.listdir(f"{game_history_folder}/{level}"):
-                levels[level]["player_names"].append(player_name)
-
-                levels[level]["best_scores"].append(get_players_highest_score(player_name, level))
-
-    return levels
+                data[level][player_name] = get_players_highest_score(player_name, level)
+    return data
 
 def find_board_number(player_name, unique_token):
     game_history_folder = "game_history"
@@ -138,11 +133,11 @@ def find_board_number(player_name, unique_token):
 
 @app.route('/')
 def index(name=None):
-    levels = get_players_names_and_best_scores_per_level()
+    data = get_players_names_and_best_scores_per_level()
 
-    return render_template("index.html", zipped_player_names_and_scores=zip(levels))
+    return render_template("index.html", data=data)
 
-@app.route('/game/start', methods=["POST"])
+@app.route('/api/game', methods=["POST"])
 def init(board_number=0):
     if not request.form.get("name"):
         return Response(json.dumps({"message": "Required parameter 'name' was not provided. How would we know who you are?"}), 422)
@@ -173,7 +168,7 @@ def init(board_number=0):
 
     return Response(json.dumps(initial_copy), mimetype='text/json')
 
-@app.route('/game/step', methods=["POST"])
+@app.route('/api/step', methods=["POST"])
 def step():
     if not request.form.get("name"):
         return Response(json.dumps({"message": "Required parameter 'name' was not provided. How would we know who you are?"}), 422)
