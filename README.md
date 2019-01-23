@@ -250,3 +250,5 @@ Occurs when
 - replace my Docker/Flash with MLFlow (ask max)
 - Could productionify this by using -d on the docker run to run in detached mode
   - use docker logs -f Hungry-Hungry-Snails to look at the stdout/stderr logs
+- crete a Makefile for all my Docker scripts
+- only return 400 when their out of moves, not on last move
