@@ -1,0 +1,4 @@
+# ensures that the game_history doesn't get copied down and instead is volumed in
+game_history
+
+venv
