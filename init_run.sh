@@ -1,1 +1,0 @@
-docker run --name hungry-hungry-snails -it -p 5000:5000 -v ~/Git/Hungry-Hungry-Snails/game_history:/app/game_history hungry-hungry-snails

@@ -11,12 +11,8 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-# We copy just the requirements.txt first to leverage Docker cache (for production)
-
-# user either COPY or VOLUME. COPY is best for production and VOLUMNE is best for development (don't have to rebuild container each src code change)
+# This copies our source code down to the container and is why we must rebuild everytime anything in the source code changes
 COPY . /app
-
-# VOLUME . /app
 
 ENTRYPOINT [ "python3" ]
 
