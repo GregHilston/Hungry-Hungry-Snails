@@ -60,9 +60,11 @@ Used to initialize a game for the player. A player may have multiple games activ
 
 ```
 curl -X POST \
-  http://0.0.0.0:5000/api/game \
-  -F name=grehg \
-  -F board_number=1
+  http://127.0.0.1:5000/api/game \
+  -d '{
+	"name": "Grehg",
+	"board_number": 0
+}'
 ```
 
 #### Successful Response
@@ -114,6 +116,29 @@ Occurs when the required field `name` (`String`) is not passed.
 
 ### Step Endpoint
 
+**Path:** `/api/step`
+
+**HTP Method:** [Post]
+
+**Required Body Parameters**
+
+- `name` (`String`): The name of the player
+- `unique_token` (`String`): The unique token of the game we're making a move of
+- `step_direction` (`String`): The cardinal direction that we're moving
+
+**Example Curl**
+
+```
+curl -X POST \
+  http://127.0.0.1:5000/api/step \
+  -d '{
+	"name": "Grehg",
+	"unique_token": "e73f8275-fd01-4d07-aadf-877c16283dcc",
+	"step_direction": "s"
+}'
+```
+#### Successful Response 
+
 **Status Code** 200
 
 **Body** JSON with the following:
@@ -146,19 +171,38 @@ Occurs when the required field `name` (`String`) is not passed.
 }
 ```
 
-**Status Code 400**
-
-Is returned when your last move allowed has been processed. All future step attempts on this game will  will return a status code `422`.
-
 #### Error Response
+
+**Status Code** 400
+
+Occurs when you have no more moves left. You'll still receive the last state of the game.
+
+**Example Response**
+
+`json`
+```
+{
+    "max_steps": 5,
+    "board": [
+        ["_", "_", "_", "_", "_"],
+        ["_", "_", "f", "_", "_"],
+        ["_", "_", "_", "_", "_"],
+        ["_", "_", "w", "_", "_"],
+        ["_", "f", "f", "f", "_"]
+    ],
+    "unique_token": "f0a13b6d-e77c-4d45-ab1d-1febdec92a36",
+    "score": 0,
+    "steps_taken": 5,
+    "message": "Game has already ended and your newest move was not processed"
+}
+```
 
 **Status Code** 422
 
-Occurs when 
+Occurs when:
 
 - The required field `name` (`String`) or `unique_token` (`String`) is not passed.
 - Your move would have taken your worm off an edge.
-- You have no more moves left.
 
 **Example Response 1**
 
