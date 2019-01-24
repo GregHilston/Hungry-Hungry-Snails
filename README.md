@@ -149,7 +149,7 @@ Occurs when the required field `name` (`String`) is not passed.
 
 **Status Code 400**
 
-Is returned when your last move allowed has been processed. All future step attempts will return a status code `422`.
+Is returned when your last move allowed has been processed. All future step attempts on this game will  will return a status code `422`.
 
 #### Error Response
 
@@ -186,7 +186,6 @@ The following scripts must be run in order:
 ## TODO
 
 - ensure that the POSTs have a JSON body being sent and not form data
-- only return 400 when their out of moves, not on last move
 - return your best score
 - return the best score
 - could support walls

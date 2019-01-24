@@ -228,13 +228,6 @@ def step():
     d["score"] = new_score
     d["steps_taken"] = steps_taken
 
-    if steps_taken == max_steps:
-        d["message"] = "Game Over, max number of steps taken"
-        # d["your best score"] = calculate_players_best_score(request.form["name"], request.form["unique_token"]) # TODO
-        # d["best score"] = calculate_best_score() # TODO
-        return Response(json.dumps(d), 400, mimetype='text/json')
-
-
     return Response(json.dumps(d), 200, mimetype='text/json')
 
 if __name__ == '__main__':
