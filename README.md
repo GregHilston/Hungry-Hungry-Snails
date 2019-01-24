@@ -21,8 +21,7 @@ The home page of our application. Returns the leader board standings per level, 
 **Example Curl**
 
 ```
-curl -X GET \
-  http://0.0.0.0:5000 \
+curl http://0.0.0.0:5000
 ```
 
 #### Successful Response
@@ -184,7 +183,6 @@ The following scripts must be run in order:
 3. run.sh OR run_watch.sh (for live reloading of code changes)
 
 ## TODO
-
 - ensure that the POSTs have a JSON body being sent and not form data
 - return your best score
 - return the best score
@@ -192,3 +190,4 @@ The following scripts must be run in order:
 - Could productionify this by using -d on the docker run to run in detached mode
   - use docker logs -f Hungry-Hungry-Snails to look at the stdout/stderr logs
 - create a Makefile for all my Docker scripts
+- Use swagger for documentation
