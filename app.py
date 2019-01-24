@@ -139,11 +139,14 @@ def index(name=None):
 
 @app.route('/api/game', methods=["POST"])
 def init(board_number=0):
-    if not request.form.get("name"):
+    print(request.json)
+
+    if "name" not in request.json:
         return Response(json.dumps({"message": "Required parameter 'name' was not provided. How would we know who you are?"}), 422)
 
-    if request.form.get("board_number"):
-        board_number = request.form.get("board_number")
+    if "board_number" in request.json:
+        board_number = request.json["board_number"]
+        print(board_number)
 
     with open(f'levels/{board_number}.json', 'r') as fp:
         INITIAL = json.load(fp)
@@ -158,73 +161,73 @@ def init(board_number=0):
 
     initial_copy["steps_taken"] = 0
 
-    game_history[request.form["name"] ] = unique_token
+    game_history[request.json["name"] ] = unique_token
 
-    create_folder_structure_for_player_if_not_exists(request.form["name"], unique_token, board_number)
+    create_folder_structure_for_player_if_not_exists(request.json["name"], unique_token, board_number)
 
     print(f"initial board \n {initial_copy['board']}")
 
-    record_step(request.form["name"], unique_token, board_number, initial_copy["board"], 0, initial_copy["max_steps"], 0) 
+    record_step(request.json["name"], unique_token, board_number, initial_copy["board"], 0, initial_copy["max_steps"], 0) 
 
     return Response(json.dumps(initial_copy), mimetype='text/json')
 
 @app.route('/api/step', methods=["POST"])
 def step():
-    if not request.form.get("name"):
+    if "name" not in request.json:
         return Response(json.dumps({"message": "Required parameter 'name' was not provided. How would we know who you are?"}), 422)
     
-    if not request.form.get("unique_token"):
+    if "unique_token" not in request.json:
         return Response(json.dumps({"message": "Required parameter 'unique_token' was not provided. How would we know what game you are playing?"}), 422)
 
-    if not request.form.get("step_direction"):        
+    if "step_direction" not in request.json:        
         return Response(json.dumps({"message": "Required parameter 'step_direction' was not provided. How would we know where your snail intends to go?"}), 400)
 
-    board_number = find_board_number(request.form["name"], request.form["unique_token"])
-    last_step_taken = calculate_last_step_taken(request.form["name"], request.form["unique_token"], board_number)
+    board_number = find_board_number(request.json["name"], request.json["unique_token"])
+    last_step_taken = calculate_last_step_taken(request.json["name"], request.json["unique_token"], board_number)
 
-    max_steps, board, score, steps_taken, player_location_index = parse_last_game_state(request.form["name"], request.form["unique_token"], last_step_taken, board_number)
+    max_steps, board, score, steps_taken, player_location_index = parse_last_game_state(request.json["name"], request.json["unique_token"], last_step_taken, board_number)
 
     if max_steps == steps_taken:
         d = {}
 
         d["max_steps"] = max_steps
         d["board"] = board
-        d["unique_token"] = request.form["unique_token"]
+        d["unique_token"] = request.json["unique_token"]
         d["score"] = score
         d["steps_taken"] = steps_taken
 
         d["message"] = "Game has already ended and your newest move was not processed"
 
-        # d["your best score"] = calculate_players_best_score(request.form["name"], request.form["unique_token"]) # TODO
+        # d["your best score"] = calculate_players_best_score(request.json["name"], request.json["unique_token"]) # TODO
         # d["best score"] = calculate_best_score() # TODO
 
         return Response(json.dumps(d), 400, mimetype='text/json')
 
-    if request.form["step_direction"]  == "n":
+    if request.json["step_direction"]  == "n":
         player_location_index_offset = -5 # going up a row
-    elif request.form["step_direction"]  == "e":
+    elif request.json["step_direction"]  == "e":
         player_location_index_offset = 1 # going right a column
-    elif request.form["step_direction"]  == "s":
+    elif request.json["step_direction"]  == "s":
         player_location_index_offset = 5 # going down a row 
-    elif request.form["step_direction"]  == "w":
+    elif request.json["step_direction"]  == "w":
         player_location_index_offset = -1 # going left a column
     else:
         return Response(json.dumps({"message": "Required parameter 'step_direction' was not valid character. Accepted characters are ['n', 'e', 's', 'w']"}), 422)
 
-    valid_mode, new_board, new_score, steps_taken = move_player(request.form["name"], request.form["unique_token"], last_step_taken, player_location_index_offset, score, steps_taken, board_number)    
+    valid_mode, new_board, new_score, steps_taken = move_player(request.json["name"], request.json["unique_token"], last_step_taken, player_location_index_offset, score, steps_taken, board_number)    
 
     if not valid_mode:
         return Response(json.dumps({"message": "Invalid move. You would have gone off the edge"}), 422)
 
     print(f"new board \n{new_board}")
 
-    record_step(request.form["name"], request.form["unique_token"], board_number, new_board, new_score, max_steps, steps_taken)
+    record_step(request.json["name"], request.json["unique_token"], board_number, new_board, new_score, max_steps, steps_taken)
 
     d = {}
 
     d["max_steps"] = max_steps
     d["board"] = new_board
-    d["unique_token"] = request.form["unique_token"]
+    d["unique_token"] = request.json["unique_token"]
     d["score"] = new_score
     d["steps_taken"] = steps_taken
 
