@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 EMPTY_SPACE_TOKEN = '_'
-PLAYER_TOKEN = 'w'
+PLAYER_TOKEN = 's'
 FOOD_TOKEN = 'f'
 game_history = {}
 
@@ -29,7 +29,7 @@ def record_step(name, unique_token, board_number, board, score, max_steps, steps
     d["score"] = score
     d["steps_taken"] = steps_taken
 
-    with open(f"game_history/{board_number}/{name}/{unique_token}/{steps_taken}.json", 'w') as fp:
+    with open(f"game_history/{board_number}/{name}/{unique_token}/{steps_taken}.json", 's') as fp:
         json.dump(d, fp)
 
 def calculate_last_step_taken(name, unique_token, board_number):
@@ -53,7 +53,7 @@ def find_player_index(name, unique_token, last_step_taken, board_number):
 
         for row in data["board"]:
             for column in row:
-                if column == "w":
+                if column == "s":
                     return player_index
 
                 player_index += 1
@@ -87,7 +87,7 @@ def move_player(name, unique_token, last_step_taken, new_player_location_index_o
 
                     if column == "f":
                         new_score += 1
-                    data_copy["board"][row_index][column_index] = "w"
+                    data_copy["board"][row_index][column_index] = "s"
                 index += 1
 
         if found_players_new_position:

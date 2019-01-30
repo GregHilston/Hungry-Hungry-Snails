@@ -1,5 +1,7 @@
 # Hungry Hungry Snails
 
+[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
+
 Hungry Hungry Snails is a small API used to host a game, interacted with via scripts through an API.
 
 ## The Objective
@@ -77,7 +79,7 @@ curl -X POST \
 - `board` (`Array of Arrays`): Describes the current state of the field. The follow single character Strings can be used to describe a cell:
   - `_`: An empty space
   - `f`: A single piece of food. Stepping onto this cell will consume the food and award the player a single point.
-  - `w`: The worm the player is controlling. This is your current location in the game.
+  - `s`: The snail the player is controlling. This is your current location in the game.
 - `unique_token` (`Str`): A unique token to represent your game id. This must be stored and sent in subsequent Step endpoint POSTs. This is used to signify to the server which game your attempting to make a move on.
 - `score` (`Int`): The player's current score.
 - `steps_taken` (`Int`): The number of steps the player has taken so far. When this counter equals `max_steps`, the game will end and no additional steps will be accepted.
@@ -92,7 +94,7 @@ curl -X POST \
         ["_", "_", "_", "_", "_"],
         ["_", "_", "f", "_", "_"],
         ["_", "_", "_", "_", "_"],
-        ["_", "_", "w", "_", "_"],
+        ["_", "_", "s", "_", "_"],
         ["_", "f", "f", "f", "_"]
     ],
     "unique_token": "fc60c0b5-0a8d-48ee-93ea-19069836f913",
@@ -147,7 +149,7 @@ curl -X POST \
 - `board` (`Array of Arrays`): Describes the current state of the field. The follow single character Strings can be used to describe a cell:
   - `_`: An empty space
   - `f`: A single piece of food. Stepping onto this cell will consume the food and award the player a single point.
-  - `w`: The worm the player is controlling. This is your current location in the game.
+  - `s`: The snail the player is controlling. This is your current location in the game.
 - `unique_token` (`Str`): A unique token to represent your game id. This must be stored and sent in subsequent Step endpoint POSTs. This is used to signify to the server which game your attempting to make a move on.
 - `score` (`Int`): The player's current score.
 - `steps_taken` (`Int`): The number of steps the player has taken so far. When this counter equals `max_steps`, the game will end and no additional steps will be accepted.
@@ -162,7 +164,7 @@ curl -X POST \
         ["_", "_", "_", "_", "_"],
         ["_", "_", "f", "_", "_"],
         ["_", "_", "_", "_", "_"],
-        ["_", "_", "w", "_", "_"],
+        ["_", "_", "s", "_", "_"],
         ["_", "f", "f", "f", "_"]
     ],
     "unique_token": "f0a13b6d-e77c-4d45-ab1d-1febdec92a36",
@@ -187,7 +189,7 @@ Occurs when you have no more moves left. You'll still receive the last state of 
         ["_", "_", "_", "_", "_"],
         ["_", "_", "f", "_", "_"],
         ["_", "_", "_", "_", "_"],
-        ["_", "_", "w", "_", "_"],
+        ["_", "_", "s", "_", "_"],
         ["_", "f", "f", "f", "_"]
     ],
     "unique_token": "f0a13b6d-e77c-4d45-ab1d-1febdec92a36",
