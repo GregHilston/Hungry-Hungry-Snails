@@ -1,4 +1,4 @@
-# Hungry Hungry Snails
+# [Hungry Hungry Snails](https://github.com/GregHilston/Hungry-Hungry-Snails)
 
 [![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
 
