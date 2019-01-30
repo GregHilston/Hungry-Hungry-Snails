@@ -4,7 +4,7 @@ Hungry Hungry Snails is a small API used to host a game, interacted with via scr
 
 ## The Objective
 
-The point of Hungry Hungry Snails is to write software to help guide your snail to the most amount of food on a 2d grid, in the least amount of steps. A leader board can be accessed to check the top score for each board.
+The point of Hungry Hungry Snails is to write software to help guide your snail to the most amount of food on a 2d grid, in the least amount of steps. A leader board can be accessed to check the top score for each board. I was interested in playing a game like this, but I was unable to find a harness to run the server logic. See the section titled "Example Solution", so see a sample greedy implementation.
 
 ## Endpoints
 
@@ -226,7 +226,12 @@ The following scripts must be run in order:
 2. clean.sh
 3. run.sh OR run_watch.sh (for live reloading of code changes)
 
+## Example Solution
+
+A greedy python solution has been provided to ensure that the API access is clear, along with giving an idea on how one can approach this problem. While this greedy approach does solve the level `0.json` with the maximum value, it will fail on more complicated levels. This is because the algorithm is very short sighted and will step towards whatever food is closest to it at each moment in time.
+
 ## TODO
+
 - ensure that the POSTs have a JSON body being sent and not form data
 - return your best score
 - return the best score
