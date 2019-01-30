@@ -1,6 +1,6 @@
 # [Hungry Hungry Snails](https://github.com/GregHilston/Hungry-Hungry-Snails)
 
-[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)]
+[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge)(https://hungry-hungry-snails.herokuapp.com/)]
 
 Hungry Hungry Snails is a small API used to host a game, interacted with via scripts through an API.
 
