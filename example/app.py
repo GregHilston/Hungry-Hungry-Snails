@@ -13,8 +13,6 @@ def calculate_manhattan_distance(point_one, point_two):
     return row_difference, column_difference
 
 def calculate_manhattan_distance_to_cardinal_direction(row_difference, column_difference):
-    print(f"row_difference {row_difference} column_difference {column_difference}")
-
     if column_difference == 0 or row_difference <= column_difference:
         if row_difference < 0:
             return 'n'
@@ -47,16 +45,10 @@ def calculate_closet_food_point(board):
     for row_index, row in enumerate(board):
         for column_index, column in enumerate(board[row_index]):
             if board[row_index][column_index] == food_value:
-                print(f"row_index {row_index} column_index {column_index}")
-
                 manhattan_distance = calculate_manhattan_distance((row_index, column_index), player_point)
                 manhattan_distance_point_sum = abs(manhattan_distance[0]) + abs(manhattan_distance[1])
 
-                print(f"manhattan_distance {manhattan_distance}")
-                print(f"manhattan_distance_point_sum {manhattan_distance_point_sum}")
-
                 if manhattan_distance_point_sum < closest_food_distance:
-                    print("\tUPDATING CLOSEST")
                     closest_food_distance = manhattan_distance_point_sum
                     closest_food_point = manhattan_distance[0], manhattan_distance[1]
 
@@ -68,14 +60,9 @@ def step(unique_token, board, name=name):
     closest_food_point = calculate_closet_food_point(board)
     cardinal_direction = calculate_manhattan_distance_to_cardinal_direction(closest_food_point[0], closest_food_point[1])
 
-    print(f"board: {board}")
-    print(f"cardinal_direction: {cardinal_direction}")
-
     json = {"name": name, "unique_token": unique_token, "step_direction": cardinal_direction}
 
     response = requests.post(endpoint, json=json)
-
-    print(response)
 
     return response
 
